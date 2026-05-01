@@ -9,8 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")
-@CrossOrigin("*")
-@PreAuthorize("hasRole('ADMIN')")
 public class Project_Controller {
 
     private final Project_Service service;
@@ -25,7 +23,7 @@ public class Project_Controller {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')") // 🔐 seulement admin
+    @PreAuthorize("hasRole('ADMIN')")
     public Project addProject(@RequestBody Project project) {
         return service.save(project);
     }
