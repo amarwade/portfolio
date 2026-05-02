@@ -2,6 +2,7 @@ package com.portfolio.backend.controller;
 
 import com.portfolio.backend.model.Project;
 import com.portfolio.backend.service.Project_Service;
+import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class Project_Controller {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public Project addProject(@RequestBody Project project) {
+    public Project addProject(@Valid @RequestBody Project project) {
         return service.save(project);
     }
 }

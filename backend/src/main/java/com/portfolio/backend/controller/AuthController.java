@@ -1,6 +1,7 @@
 package com.portfolio.backend.controller;
 
 import com.portfolio.backend.security.JwtUtil;
+import jakarta.validation.Valid;
 import org.springframework.security.authentication.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody AuthRequest request) {
+    public String login(@Valid @RequestBody AuthRequest request) {
 
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

@@ -7,9 +7,12 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class ContactService {
+    private static final Logger log = LoggerFactory.getLogger(ContactService.class);
 
     private final ContactRepository contactRepository;
     private final JavaMailSender mailSender;
@@ -52,7 +55,7 @@ public class ContactService {
         try {
             mailSender.send(mail);
         } catch (MailException ex) {
-            throw new IllegalStateException("Message enregistre mais envoi email impossible.", ex);
+            log.warn("Message enregistre mais envoi email impossible pour le contact {}", message.getEmail(), ex);
         }
     }
 

@@ -1,0 +1,3 @@
+ALTER TABLE project
+    ALTER COLUMN description TYPE TEXT,
+    ALTER COLUMN tech TYPE TEXT;
