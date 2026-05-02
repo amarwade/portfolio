@@ -1,6 +1,6 @@
 export const profileData = {
   name: "Amar WADE",
-  title: "Ingénieur en informatique — Développeur Java / Angular (alternance)",
+  title: "Ingénieur en informatique — Développeur Java(Spring Boot) - Alternance",
   eyebrow: "Disponible en alternance · Backend & full stack",
   /** Une phrase d’accroche très visible sous le nom */
   //heroTagline:

@@ -1,173 +1,138 @@
 # Portfolio — Amar WADE
 
-Site vitrine full-stack (**React** + **Spring Boot**) pour candidatures (**alternance** / stage). Sections : À propos avec photo, expérience, formation, certifications, compétences par catégories, projets (données API), contact.
+Site vitrine full-stack (**React** + **Spring Boot**) pour candidatures (alternance / stage).  
+Le frontend est public. Le backend expose une API projets/contact et un endpoint d'authentification admin.
 
 [![CI](https://github.com/amarwade/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/amarwade/portfolio/actions/workflows/ci.yml)
 
-| | |
+## Stack
+
+| Couche | Technologies |
 |---|---|
-| **Frontend** | Create React App, axios, typo Outfit / DM Sans |
-| **Backend** | Spring Boot 3.3, Java 17, Spring Security, JWT, JPA |
-| **Base de données** | PostgreSQL |
+| Frontend | React (CRA), axios |
+| Backend | Spring Boot 3.3, Java 17, Spring Security, JWT, JPA |
+| Database | PostgreSQL |
+| Migrations | Flyway |
 
-## Démo
+## Structure du depot
 
-### Démo locale (100 % fonctionnelle)
-
-À exécuter dans l’ordre :
-
-1. Démarrer **PostgreSQL** et créer la base `portfolio_db` (voir section Lancement).
-2. Lancer **l’API** : depuis `backend/`, `./mvnw spring-boot:run` — interface sur **`http://localhost:8081`**.
-3. Lancer **le site** : depuis `frontend/`, `npm install` puis `npm start` — **`http://localhost:3000`**.
-
-Contrôles rapides :
-
-- Liste des projets : [http://localhost:8081/api/projects](http://localhost:8081/api/projects)
-- Page d’accueil avec photo + sections : [http://localhost:3000](http://localhost:3000)
-
-### Démo en ligne (à ajouter après déploiement)
-
-Une fois ton site hébergé, complète ces lignes dans ce README :
-
-| Élément | URL |
-|---------|-----|
-| **Site (frontend)** | `https://…` |
-| **API** *(si séparée)* | `https://…` |
-
-Architecture classique gratuit / low-cost :
-
-- **Frontend** : [Vercel](https://vercel.com/), [Netlify](https://www.netlify.com/) ou GitHub Pages (build CRA : `npm run build`, dossier `build/` ; définir `REACT_APP_API_BASE_URL` vers ton API publique).
-- **Backend + PostgreSQL** : [Railway](https://railway.app/), [Render](https://render.com/) ou [Fly.io](https://fly.io/) avec une base PostgreSQL managée (**Neon**, **Supabase**, etc.).
-- Adapter **CORS** dans `SecurityConfig` pour l’origine exacte du front (sans slash final).
-
-Screenshot optionnel pour le README : ajoute `docs/capture-accueil.png` puis une ligne  
-
-`![Aperçu](docs/capture-accueil.png)` dans cette section.
-
-## Structure du dépôt
-
-```
+```text
 portfolio/
-├── backend/                 # API Spring Boot
-│   └── scripts/             # SQL (colonnes projet, inserts projets)
+├── backend/
+│   ├── src/main/java/
+│   ├── src/main/resources/
+│   │   └── db/migration/
+│   ├── scripts/
+│   └── .env.example
 ├── frontend/
-│   ├── public/             # favicon, photo-profil.jpg, CV PDF…
+│   ├── public/
 │   └── src/
-│       ├── components/     # sections du portfolio
-│       ├── data/            # portfolioData.js (texte hors projets API)
-│       └── hooks/           # ex. reveal au scroll
 └── README.md
 ```
 
-## Prérequis
+## Prerequis
 
-- **Node.js** 18+
-- **Java** 17
-- **Maven** (ou `backend/mvnw`, `backend/mvnw.cmd`)
-- **PostgreSQL** (base créée au préalable, ex. `portfolio_db`)
+- Node.js 18+
+- Java 17
+- PostgreSQL
 
-## Variables d’environnement
+## Variables d'environnement
 
 ### Backend
 
-À définir en production ; ne pas committer de mots de passe réels.
+Copier `backend/.env.example` et definir des valeurs locales (sans commit de secrets).
 
-| Variable | Rôle |
-|----------|------|
-| `DB_URL` | JDBC PostgreSQL *(défaut dans `application.properties` si absent)* |
-| `DB_USERNAME` | Utilisateur base |
-| `DB_PASSWORD` | Mot de passe base |
-| `SERVER_PORT` | Port HTTP *(défaut `8081`)* |
-| `JWT_SECRET` | Clé HMAC JWT en **base 64**, taille adaptée HS256 *(obligatoire en prod)* |
-| `JWT_EXPIRATION_MS` | Durée de vie du JWT en ms |
-| `MAIL_ENABLED` | Active l'envoi d'email sur nouveau message contact (`true`/`false`) |
-| `MAIL_TO` | Adresse qui reçoit les messages de contact (ex. `amarwade927@gmail.com`) |
-| `MAIL_FROM` | Adresse expéditeur utilisée par l'application |
-| `MAIL_HOST` | Serveur SMTP (ex. `smtp.gmail.com`) |
-| `MAIL_PORT` | Port SMTP (ex. `587`) |
-| `MAIL_USERNAME` | Utilisateur SMTP |
-| `MAIL_PASSWORD` | Mot de passe SMTP / mot de passe d'application |
-| `MAIL_SMTP_AUTH` | Auth SMTP activée (`true` recommandé) |
-| `MAIL_SMTP_STARTTLS` | STARTTLS activé (`true` recommandé) |
+Variables principales :
 
-Pour le **CORS** en production, adapte [`SecurityConfig`](backend/src/main/java/com/portfolio/backend/security/SecurityConfig.java) (origins autorisées au lieu du seul `localhost:3000`).
-
-Quand `MAIL_ENABLED=true`, chaque `POST /api/contact`:
-- enregistre le message en base,
-- envoie un email de notification vers `MAIL_TO`,
-- définit `Reply-To` à l'email du contact pour répondre directement.
+- `DB_URL`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `JWT_SECRET` (base64, 32+ bytes avant encodage)
+- `JWT_EXPIRATION_MS`
+- `MAIL_ENABLED`, `MAIL_TO`, `MAIL_FROM`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`
+- `DDL_AUTO` (par defaut `validate`)
+- `SHOW_SQL` (par defaut `false`)
 
 ### Frontend
 
-| Variable | Rôle |
-|----------|------|
-| `REACT_APP_API_BASE_URL` | URL de l’API, ex. `http://localhost:8081/api` *(défaut dans le code si absent)* |
-
-Fichiers statiques à placer sous `frontend/public/` :
-
-- **`photo-profil.jpg`** — photo du hero *(déjà référencée dans [`portfolioData.js`](frontend/src/data/portfolioData.js))*.
-- **`cv-amar-wade.pdf`** (ou le nom défini dans `cvUrl`) — lien « Télécharger mon CV ».
+- `REACT_APP_API_BASE_URL` (ex: `http://localhost:8081/api`)
 
 ## Lancer en local
 
-### 1. Base PostgreSQL
+### 1) Configurer PostgreSQL
 
-Créer une base (ex. `portfolio_db`) et ajuster les variables `DB_*` si besoin.
+- Creer la base `portfolio_db`.
+- Definir `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` dans le terminal avant demarrage.
 
-### 2. Données des projets (optionnel)
+### 2) Definir une cle JWT valide
 
-Depuis PostgreSQL :
+`JWT_SECRET` est obligatoire et doit etre suffisamment forte pour HS256.
 
-```bash
-psql -U postgres -d portfolio_db -f backend/scripts/fix_project_columns.sql
-psql -U postgres -d portfolio_db -f backend/scripts/insert_projets_academiques.sql
+Exemple PowerShell :
+
+```powershell
+$bytes = New-Object byte[] 32
+[System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+$env:JWT_SECRET = [Convert]::ToBase64String($bytes)
 ```
 
-*(Sous Windows, chemins adaptés ; encodage UTF-8 conseillé, ex. `PGCLIENTENCODING=UTF8`.)*
-
-### 3. Backend
+### 3) Demarrer le backend
 
 ```powershell
 cd backend
+$env:DB_URL="jdbc:postgresql://localhost:5432/portfolio_db"
+$env:DB_USERNAME="postgres"
+$env:DB_PASSWORD="your_password"
 .\mvnw.cmd spring-boot:run
 ```
 
-Unix / macOS : `./mvnw spring-boot:run`
+Backend disponible sur `http://localhost:8081`.
 
-### 4. Frontend
+### 4) Demarrer le frontend
 
 ```powershell
 cd frontend
-npm install
+npm ci
 npm start
 ```
 
-Ouvrir **`http://localhost:3000`**.
+Frontend disponible sur `http://localhost:3000`.
+
+## Endpoints API (resume)
+
+| Methode | Route | Acces |
+|---|---|---|
+| `GET` | `/api/projects` | Public |
+| `POST` | `/api/projects` | Admin (JWT) |
+| `POST` | `/api/contact` | Public |
+| `POST` | `/api/auth/login` | Public (retourne JWT) |
+
+## Notes importantes
+
+- Le portfolio visiteur n'a pas besoin de login public.
+- La page login frontend peut servir a un usage admin interne.
+- `backend/.env.example` est un modele ; il n'est pas charge automatiquement par Spring.
+- Si Flyway echoue avec `Unsupported Database` (ex: PostgreSQL 18.x), utilisez une version supportee de Postgres (16/17) ou mettez a jour la stack Flyway.
 
 ## Scripts utiles
 
-| Commande | Emplacement |
-|----------|-------------|
-| `npm start` | Frontend — serveur de dev |
-| `npm run build` | Frontend — build production |
-| `npm test` | Frontend — tests Jest |
-| `.\mvnw.cmd test` | Backend — tests Maven |
-| `.\mvnw.cmd spring-boot:run` | Backend — API |
+### Backend
 
-## API (résumé)
+- `.\mvnw.cmd test`  
+- `.\mvnw.cmd spring-boot:run`
 
-| Méthode | Route | Accès |
-|---------|-------|--------|
-| `GET` | `/api/projects` | Public — liste des projets |
-| `POST` | `/api/projects` | Authentifié — rôle `ADMIN` |
-| `POST` | `/api/contact` | Public — message de contact (validation) |
-| `POST` | `/api/auth/login` | Public — JWT |
+### Frontend
 
-## Sécurité (rappels)
+- `npm test -- --watchAll=false`
+- `npm run build`
 
-- Remplacer **`JWT_SECRET`** et les identifiants **DB** pour tout environnement exposé.
-- Ne pas pousser de secrets dans Git ; utiliser les variables d’environnement ou un gestionnaire de secrets sur la plateforme d’hébergement.
+## Securite
+
+- Ne jamais committer de secrets (`DB_PASSWORD`, `JWT_SECRET`, `MAIL_PASSWORD`).
+- Utiliser des variables d'environnement par environnement (local/staging/prod).
+- Adapter CORS en production dans `backend/src/main/java/com/portfolio/backend/security/SecurityConfig.java`.
 
 ## Licence / usage
 
-Projet personnel / académique — consultable pour candidature et présentation de compétences.
+Projet personnel / academique, consultable pour candidature et presentation de competences.
+
