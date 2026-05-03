@@ -1,0 +1,93 @@
+services:
+  # PostgreSQL database service.
+  db:
+    image: postgres:16-alpine
+    container_name: portfolio_db
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    environment:
+      POSTGRES_DB: portfolio_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persist DB data between container restarts.
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d portfolio_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot backend API.
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: portfolio_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env.docker
+    environment:
+      # Database connection for backend container.
+      DB_URL: jdbc:postgresql://db:5432/portfolio_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      SERVER_PORT: 8081
+
+      # JWT must be base64 and strong enough for HS256.
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
+
+      # Mail disabled by default in docker local stack.
+      MAIL_ENABLED: ${MAIL_ENABLED:-false}
+      MAIL_TO: ${MAIL_TO:-""}
+      MAIL_FROM: ${MAIL_FROM:-noreply@portfolio.local}
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-""}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-""}
+      MAIL_SMTP_AUTH: ${MAIL_SMTP_AUTH:-true}
+      MAIL_SMTP_STARTTLS: ${MAIL_SMTP_STARTTLS:-true}
+
+      # Keep schema behavior explicit.
+      DDL_AUTO: validate
+      SHOW_SQL: ${SHOW_SQL:-false}
+      # Override current local default and enable Flyway in docker flow.
+      SPRING_FLYWAY_ENABLED: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8081/api/projects || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    ports:
+      - "8081:8081"
+
+  # Frontend static app served by Nginx.
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # From browser point of view (host machine), backend is exposed on localhost:8081.
+        REACT_APP_API_BASE_URL: http://localhost:8081/api
+    container_name: portfolio_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres_data:

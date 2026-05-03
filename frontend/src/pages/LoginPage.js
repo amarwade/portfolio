@@ -12,7 +12,7 @@ function LoginPage() {
       const res = await login(username, password);
 
       // 🔥 STOCKAGE DU TOKEN
-      localStorage.setItem("token", res.data);
+      sessionStorage.setItem("token", res.data);
 
       alert("Connexion réussie !");
       window.location.href = "/"; // redirection

@@ -1,12 +1,13 @@
 export const profileData = {
   name: "Amar WADE",
-  title: "Ingénieur en informatique — Développeur Java(Spring Boot) - Alternance",
+  title: "Elève ingénieur en informatique — A la recherche d'alternance",
   eyebrow: "Disponible en alternance · Backend & full stack",
   /** Une phrase d’accroche très visible sous le nom */
   //heroTagline:
     //"Du besoin métier à l’application en production : Java, Spring Boot, APIs sécurisées et produits web maintenables.",
   pitch:
-    "Élève ingénieur en informatique, spécialisé en développement Java et Spring Boot, je conçois des applications web sécurisées, performantes et maintenables en appliquant les bonnes pratiques d’architecture logicielle (MVC, SOLID, Design Patterns). Passionné par le développement backend et les systèmes d’information, je recherche une alternance me permettant de contribuer à des projets concrets, d’évoluer dans un environnement technique exigeant et de renforcer mes compétences en ingénierie logicielle, DevOps et transformation digitale.",  /** Place ta photo dans frontend/public/ (ex. photo-profil.jpg) puis mets le bon nom de fichier ici */
+    "Élève ingénieur en informatique passionné par le développement et les nouvelles technologies. Je recherche une alternance à partir de septembre 2026 pour mettre en pratique mes connaissances en Java, Spring Boot et développement web, tout en contribuant à des projets concrets au sein d'une équipe technique. Curieux et motivé, je souhaite acquérir de l'expérience en entreprise et développer mes compétences en ingénierie logicielle, DevOps et architecture.",
+  /** Place ta photo dans frontend/public/ (ex. photo-profil.jpg) puis mets le bon nom de fichier ici */
   heroImage: "/photo-profil.jpg",
   heroImageAlt: "Amar WADE — développeur Java et applications web",
   location: "62100 Calais, France",
