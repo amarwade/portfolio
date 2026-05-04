@@ -7,6 +7,7 @@ import CertificationsSection from "./components/CertificationsSection";
 import SkillsSection from "./components/SkillsSection";
 import ProjectsSection from "./components/ProjectsSection";
 import ContactSection from "./components/ContactSection";
+import Navigation from "./components/Navigation";
 import {
   profileData,
   skillsByCategory,
@@ -63,42 +64,31 @@ function App() {
         <div className="page-atmosphere__orb page-atmosphere__orb--3" />
         <div className="page-atmosphere__grid" />
       </div>
+      
+      <Navigation />
+      
       <div className="app-shell">
-      <a className="skip-link" href="#main-content">
-        Aller au contenu
-      </a>
-      <header className="topbar">
-        <a className="brand" href="#top">
-          {profileData.name}
+        <a className="skip-link" href="#main-content">
+          Aller au contenu
         </a>
-        <nav className="nav" aria-label="Navigation principale">
-          {navLinks.map((link) => (
-            <a key={link.href} href={link.href}>
-              {link.label}
-            </a>
-          ))}
-        </nav>
-        <button
-          className="theme-toggle"
-          type="button"
-          onClick={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
-          aria-label={theme === "dark" ? "Activer le thème clair" : "Activer le thème sombre"}
-          aria-pressed={theme === "light"}
-          title={theme === "dark" ? "Thème clair" : "Thème sombre"}
-        >
-          {theme === "dark" ? "☀️" : "🌙"}
-        </button>
-      </header>
 
-      <main id="main-content" tabIndex={-1}>
-        <HeroSection profile={profileData} />
-        <ExperienceSection items={experienceData} />
-        <FormationSection items={formationData} />
-        <CertificationsSection items={certificationData} />
-        <SkillsSection categories={skillsByCategory} />
-        <ProjectsSection />
-        <ContactSection />
-      </main>
+        <main id="main-content" tabIndex={-1}>
+          <HeroSection profile={profileData} />
+          <section id="about" className="section section-cv reveal-on-scroll">
+            <div className="about-content">
+              <h2 className="cv-section-title">À propos</h2>
+              <p className="about-description">
+                {profileData.pitch}
+              </p>
+            </div>
+          </section>
+          <ExperienceSection items={experienceData} />
+          <FormationSection items={formationData} />
+          <CertificationsSection items={certificationData} />
+          <SkillsSection categories={skillsByCategory} />
+          <ProjectsSection />
+          <ContactSection />
+        </main>
       </div>
     </>
   );
