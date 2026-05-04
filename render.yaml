@@ -1,0 +1,38 @@
+services:
+  # Service type: web
+  - type: web
+    name: portfolio-backend
+    env: java
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/*.jar
+    envVars:
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRATION_MS
+        value: "86400000"
+      - key: SERVER_PORT
+        value: "8080"
+      - key: DDL_AUTO
+        value: "update"
+      - key: SHOW_SQL
+        value: "false"
+      - key: SPRING_FLYWAY_ENABLED
+        value: "false"
+      - key: MAIL_ENABLED
+        value: "false"
+
+databases:
+  - name: portfolio-db
+    databaseName: portfolio_db
+    user: portfolio_user
+    plan: free
+    region: oregon
