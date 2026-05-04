@@ -40,7 +40,7 @@ function Navigation() {
   };
 
   const navItems = [
-    { id: 'hero', label: 'Accueil', icon: '🏠' },
+    
     { id: 'about', label: 'À propos', icon: '👤' },
     { id: 'projects', label: 'Projets', icon: '💼' },
     { id: 'experience', label: 'Expérience', icon: '📈' },

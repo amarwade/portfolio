@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useScrollReveal } from "./hooks/useScrollReveal";
 import HeroSection from "./components/HeroSection";
 import ExperienceSection from "./components/ExperienceSection";
@@ -42,19 +42,6 @@ function App() {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
-
-  const navLinks = useMemo(
-    () => [
-      { href: "#about", label: "A propos" },
-      { href: "#experience", label: "Experience" },
-      { href: "#formation", label: "Formation" },
-      { href: "#certifications", label: "Certifications" },
-      { href: "#skills", label: "Competences" },
-      { href: "#projects", label: "Projets" },
-      { href: "#contact", label: "Contact" },
-    ],
-    []
-  );
 
   return (
     <>
